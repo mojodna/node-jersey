@@ -24,3 +24,28 @@ metricsd/statsd server. Then, if you later move both applications to the same
 network, simply reconfigure the server name and stop using Jersey.
 
 ## How?
+
+Spin up an on-ramp (UDP → TCP), listening on `udp://localhost:8125` and
+connecting to `tcp://localhost:8126` by default:
+
+```bash
+$ jersey-onramp
+```
+
+Spin up an off-ramp (TCP → UDP), listening on `tcp://localhost:8126` and
+connecting to `udp://localhost:8125` by default:
+
+```bash
+$ jersey-offramp
+```
+
+(Note: these form a loop when run on the same host. Use `--help` for options.)
+
+You can also create on- and off-ramps programmatically. See `bin/onramp` and
+`bin/offramp` to see how.
+
+## License
+
+Copyright (c) 2012 Seth Fitzsimmons
+
+Published under the BSD License.
