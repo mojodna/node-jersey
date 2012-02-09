@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+
+var jersey = require("..");
+var options = require("commander");
+
+options.option("-l, --listen <port>", "specify the port to listen on", 8125, parseInt)
+    .option("-h, --host <host>", "specify the remote host", "localhost")
+    .option("-p, --port <port>", "specify the remote port", 8126, parseInt)
+    .parse(process.argv);
+
+jersey.onRamp(options.listen, options.port, options.port, function() {
+    console.info("Connected udp://localhost:%d to tcp://%s:%d.", options.listen, options.host, options.port);
+});
+

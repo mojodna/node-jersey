@@ -8,13 +8,16 @@
     "url": "git://github.com/mojodna/node-jersey.git"
   },
   "main": "./index",
+  "bin": { "onramp": "./bin/onramp", "offramp": "./offramp" },
   "scripts": {
     "test": "node_modules/.bin/mocha"
   },
   "engines": {
     "node": "~0.6.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "commander": "~0.5.2"
+  },
   "devDependencies": {
     "mocha": "~0.12.0",
     "chai": "~0.3.1"
