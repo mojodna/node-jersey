@@ -8,7 +8,7 @@
     "url": "git://github.com/mojodna/node-jersey.git"
   },
   "main": "./index",
-  "bin": { "onramp": "./bin/onramp", "offramp": "./offramp" },
+  "bin": { "jersey-onramp": "./bin/onramp", "jersey-offramp": "./bin/offramp" },
   "scripts": {
     "test": "node_modules/.bin/mocha"
   },
