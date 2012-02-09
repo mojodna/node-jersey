@@ -34,7 +34,14 @@ var _decodeProtocol = exports._decodeProtocol = function(data) {
     };
 };
 
-exports.offRamp = function(listenPort, dstPort, dstHost) {
+exports.offRamp = function(listenPort, dstPort, dstHost, callback) {
+    callback = callback || function() {};
+
+    if (dstHost instanceof Function) {
+        callback = dstHost;
+        dstHost = undefined;
+    }
+
     dstHost = dstHost || "localhost";
 
     // shared proxy socket
@@ -57,6 +64,8 @@ exports.offRamp = function(listenPort, dstPort, dstHost) {
     ramp.on("close", function() {
         proxy.close();
     });
+
+    ramp.on("listening", callback);
 
     ramp.listen(listenPort);
 
