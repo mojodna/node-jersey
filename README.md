@@ -1,3 +1,6 @@
+[![Build
+Status](https://secure.travis-ci.org/mojodna/node-jersey.png)](http://travis-ci.org/mojodna/node-jersey)
+
 # node-jersey
 
 Bridges UDP packets over the information superhighway.
