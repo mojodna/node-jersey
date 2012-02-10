@@ -8,6 +8,6 @@ options.option("-l, --listen <port>", "specify the port to listen on (8124)", 81
     .option("-h, --host <host>", "specify the target host (localhost)", "localhost")
     .parse(process.argv);
 
-jersey.offRamp(options.listen, options.port, options.port, function() {
+jersey.offRamp(options.listen, options.port, options.host, function() {
     console.info("Connected tcp://localhost:%d to udp://%s:%d.", options.listen, options.host, options.port);
 });
