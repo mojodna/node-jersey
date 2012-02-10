@@ -82,21 +82,14 @@ exports.onRamp = function(listenPort, dstPort, dstHost, callback) {
 
     dstHost = dstHost || "localhost";
 
-    // shared proxy connection
-    var proxy = net.connect(dstPort, dstHost);
-    proxy.on("error", function(err) {
-        // TODO simulate error conditions
-        console.warn("Proxy connection error:", err);
-        // TODO recreate connection?
-    });
-
     var ramp = dgram.createSocket("udp4");
     ramp.on("message", function(msg, rinfo) {
-        proxy.write(msg.length + ":" + msg);
-    });
-
-    ramp.on("close", function() {
-        proxy.end();
+        // TODO a shared TCP connection would be nice, but invalid messages
+        // combined together will confuse the protocol debugger
+        var proxy = net.connect(dstPort, dstHost, function() {
+            proxy.write(msg.length + ":" + msg);
+            proxy.end();
+        });
     });
 
     ramp.on("listening", callback);
