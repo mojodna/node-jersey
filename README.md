@@ -3,7 +3,7 @@ Status](https://secure.travis-ci.org/mojodna/node-jersey.png)](http://travis-ci.
 
 # node-jersey
 
-Bridges UDP packets over the information superhighway.
+Bridges UDP packets on to the information superhighway.
 
 ## Why?
 

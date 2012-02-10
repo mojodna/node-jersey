@@ -1,8 +1,8 @@
 {
   "author": "Seth Fitzsimmons <seth@mojodna.net> (http://mojodna.net/)",
   "name": "jersey",
-  "description": "Bridges UDP packets over the information superhighway.",
-  "version": "0.1.0-SNAPSHOT",
+  "description": "Bridges UDP packets on to the information superhighway.",
+  "version": "0.1.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/mojodna/node-jersey.git"
