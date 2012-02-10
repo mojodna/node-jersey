@@ -3,7 +3,10 @@
 var dgram = require("dgram");
 var net = require("net");
 
-var _decodeProtocol = exports._decodeProtocol = function(data) {
+/**
+ * Generate a protocol decoder suitable for associating with 'data' events.
+ */
+var _protocolDecoder = exports._protocolDecoder = function() {
     var length = 0;
     var buffer = new Buffer("");
 
@@ -34,6 +37,15 @@ var _decodeProtocol = exports._decodeProtocol = function(data) {
     };
 };
 
+/**
+ * Create an off-ramp; receive data via TCP and output it on a UDP socket.
+ *
+ * @param {integer} listenPort TCP port to listen on.
+ * @param {integer} dstPort Target UDP port.
+ * @param {string} [dstHost] Target UDP host.
+ * @param {function} [callback] Called when the TCP server has started
+ *                   listening.
+ */
 exports.offRamp = function(listenPort, dstPort, dstHost, callback) {
     callback = callback || function() {};
 
@@ -54,7 +66,7 @@ exports.offRamp = function(listenPort, dstPort, dstHost, callback) {
     });
 
     var ramp = net.createServer(function(sock) {
-        sock.on("data", _decodeProtocol());
+        sock.on("data", _protocolDecoder());
 
         sock.on("message", function(message) {
             proxy.send(message, 0, message.length, dstPort, dstHost);
@@ -72,6 +84,15 @@ exports.offRamp = function(listenPort, dstPort, dstHost, callback) {
     return ramp;
 };
 
+/**
+ * Create an on-ramp; receive data via UDP and output it via TCP.
+ *
+ * @param {integer} listenPort UDP port to listen on.
+ * @param {integer} dstPort Target TCP port.
+ * @param {string} [dstHost] Target TCP host.
+ * @param {function} [callback] Called when the UDP server has started
+ *                   listening.
+ */
 exports.onRamp = function(listenPort, dstPort, dstHost, callback) {
     callback = callback || function() {};
 

@@ -32,9 +32,9 @@ var randomString = function(length) {
 };
 
 describe("jersey", function() {
-    describe("._decodeProtocol", function() {
+    describe("._protocolDecoder", function() {
         it("should return a function suitable for processing 'data' events", function() {
-            expect(jersey._decodeProtocol()).to.be.instanceof(Function);
+            expect(jersey._protocolDecoder()).to.be.instanceof(Function);
         });
 
         it("should emit 'message' events when a complete message has been successfully decoded", function(done) {
@@ -46,7 +46,7 @@ describe("jersey", function() {
                 done();
             });
 
-            var decoder = jersey._decodeProtocol().bind(emitter);
+            var decoder = jersey._protocolDecoder().bind(emitter);
             decoder("6:Newark");
         });
 
@@ -59,7 +59,7 @@ describe("jersey", function() {
                 done();
             });
 
-            var decoder = jersey._decodeProtocol().bind(emitter);
+            var decoder = jersey._protocolDecoder().bind(emitter);
             decoder("6");
             decoder(":");
             decoder("New");
@@ -144,7 +144,7 @@ describe("jersey", function() {
 
             // assert that data is received by a TCP server
             sink.on("connection", function(sock) {
-                sock.on("data", jersey._decodeProtocol());
+                sock.on("data", jersey._protocolDecoder());
                 sock.on("message", function(message) {
                     expect(message.toString()).to.equal(input);
                     done();
