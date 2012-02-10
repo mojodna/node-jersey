@@ -3,9 +3,9 @@
 var jersey = require("..");
 var options = require("commander");
 
-options.option("-l, --listen <port>", "specify the port to listen on", 8126, parseInt)
-    .option("-h, --host <host>", "specify the remote host", "localhost")
-    .option("-p, --port <port>", "specify the remote port", 8125, parseInt)
+options.option("-l, --listen <port>", "specify the port to listen on (8124)", 8124, parseInt)
+    .option("-p, --port <port>", "specify the target port (8125)", 8125, parseInt)
+    .option("-h, --host <host>", "specify the target host (localhost)", "localhost")
     .parse(process.argv);
 
 jersey.offRamp(options.listen, options.port, options.port, function() {
