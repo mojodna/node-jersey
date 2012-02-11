@@ -34,13 +34,13 @@ var randomString = function(length) {
 describe("jersey", function() {
     describe("._protocolDecoder", function() {
         it("should return a function suitable for processing 'data' events", function() {
-            expect(jersey._protocolDecoder()).to.be.instanceof(Function);
+            expect(jersey._protocolDecoder()).to.be.an.instanceof(Function);
         });
 
         it("should emit 'message' events when a complete message has been successfully decoded", function(done) {
             var emitter = new EventEmitter();
             emitter.on("message", function(message) {
-                expect(message).to.be.instanceof(Buffer);
+                expect(message).to.be.an.instanceof(Buffer);
                 expect(message.toString()).to.equal("Newark");
 
                 done();
@@ -53,7 +53,7 @@ describe("jersey", function() {
         it("should emit 'message' events when a fragmented message has been successfully decoded", function(done) {
             var emitter = new EventEmitter();
             emitter.on("message", function(message) {
-                expect(message).to.be.instanceof(Buffer);
+                expect(message).to.be.an.instanceof(Buffer);
                 expect(message.toString()).to.equal("Newark");
 
                 done();
