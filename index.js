@@ -42,7 +42,7 @@ var _protocolDecoder = exports._protocolDecoder = function() {
  *
  * @param {integer} listenPort TCP port to listen on.
  * @param {integer} dstPort Target UDP port.
- * @param {string} [dstHost] Target UDP host.
+ * @param {string} [dstHost] Target UDP host (defaults to 'localhost').
  * @param {function} [callback] Called when the TCP server has started
  *                   listening.
  */
@@ -89,7 +89,7 @@ exports.offRamp = function(listenPort, dstPort, dstHost, callback) {
  *
  * @param {integer} listenPort UDP port to listen on.
  * @param {integer} dstPort Target TCP port.
- * @param {string} [dstHost] Target TCP host.
+ * @param {string} [dstHost] Target TCP host (defaults to 'localhost').
  * @param {function} [callback] Called when the UDP server has started
  *                   listening.
  */
