@@ -108,7 +108,8 @@ exports.onRamp = function(listenPort, dstPort, dstHost, callback) {
         // TODO a shared TCP connection would be nice, but invalid messages
         // combined together will confuse the protocol debugger
         var proxy = net.connect(dstPort, dstHost, function() {
-            proxy.write(msg.length + ":" + msg);
+            proxy.write(msg.length + ":");
+            proxy.write(msg);
             proxy.end();
         });
     });
