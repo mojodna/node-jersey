@@ -106,7 +106,7 @@ exports.onRamp = function(listenPort, dstPort, dstHost, callback) {
     var ramp = dgram.createSocket("udp4");
     ramp.on("message", function(msg, rinfo) {
         // TODO a shared TCP connection would be nice, but invalid messages
-        // combined together will confuse the protocol debugger
+        // combined together will confuse the protocol decoder
         var proxy = net.connect(dstPort, dstHost, function() {
             proxy.write(msg.length + ":");
             proxy.write(msg);
