@@ -10,7 +10,7 @@
   "main": "./index",
   "bin": { "jersey-onramp": "./bin/onramp", "jersey-offramp": "./bin/offramp" },
   "scripts": {
-    "test": "node_modules/.bin/mocha"
+    "test": "node_modules/.bin/mocha -R spec"
   },
   "engines": {
     "node": "~0.6.0"
