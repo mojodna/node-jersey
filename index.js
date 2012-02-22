@@ -112,6 +112,11 @@ exports.onRamp = function(listenPort, dstPort, dstHost, callback) {
             proxy.write(msg);
             proxy.end();
         });
+
+        proxy.on("error", function(err) {
+            // TODO simulate error conditions
+            console.warn("Proxy socket error:", err);
+        });
     });
 
     ramp.on("listening", callback);
