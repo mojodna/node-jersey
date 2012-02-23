@@ -60,7 +60,7 @@ exports.offRamp = function(listenPort, dstPort, dstHost, callback) {
     var proxy = dgram.createSocket("udp4");
 
     proxy.on("error", function(err) {
-        // TODO simulate error conditions
+        // TODO simulate error conditions (what are the error conditions?)
         console.warn("Proxy socket error:", err);
         // TODO recreate socket?
     });
@@ -114,8 +114,7 @@ exports.onRamp = function(listenPort, dstPort, dstHost, callback) {
         });
 
         proxy.on("error", function(err) {
-            // TODO simulate error conditions
-            console.warn("Proxy socket error:", err);
+            console.warn("Proxy socket error: %s", err);
         });
     });
 

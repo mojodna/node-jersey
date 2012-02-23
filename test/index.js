@@ -68,86 +68,108 @@ describe("jersey", function() {
     });
 
     describe(".offRamp()", function() {
-        var ramp;
-        var sink;
+        describe("with a connected UDP sink", function() {
+            var ramp;
+            var sink;
 
-        beforeEach(function(finished) {
-            var done = wait(2, finished);
+            beforeEach(function(finished) {
+                var done = wait(2, finished);
 
-            ramp = jersey.offRamp(OFFRAMP_PORT, SINK_PORT);
-            ramp.on("listening", done);
+                ramp = jersey.offRamp(OFFRAMP_PORT, SINK_PORT);
+                ramp.on("listening", done);
 
-            sink = dgram.createSocket("udp4");
-            sink.on("listening", done);
-            sink.bind(SINK_PORT);
-        });
-
-        afterEach(function(finished) {
-            var done = wait(2, finished);
-
-            ramp.on("close", done);
-            sink.on("close", done);
-
-            ramp.close();
-            sink.close();
-        });
-
-        it("should receive data over a TCP connection and output it via UDP", function(done) {
-            var output = randomString(1024);
-            var input = output.length + ":" + output;
-
-            // send data via TCP
-            var client = net.connect(OFFRAMP_PORT, function() {
-                client.end(input);
+                sink = dgram.createSocket("udp4");
+                sink.on("listening", done);
+                sink.bind(SINK_PORT);
             });
 
-            // assert that data is received on a UDP socket
-            sink.on("message", function(msg, rinfo) {
-                expect(msg.toString()).to.equal(output);
-                done();
+            afterEach(function(finished) {
+                var done = wait(2, finished);
+
+                ramp.on("close", done);
+                sink.on("close", done);
+
+                ramp.close();
+                sink.close();
+            });
+
+            it("should receive data over a TCP connection and output it via UDP", function(done) {
+                var output = randomString(1024);
+                var input = output.length + ":" + output;
+
+                // send data via TCP
+                var client = net.connect(OFFRAMP_PORT, function() {
+                    client.end(input);
+                });
+
+                // assert that data is received on a UDP socket
+                sink.on("message", function(msg, rinfo) {
+                    expect(msg.toString()).to.equal(output);
+                    done();
+                });
             });
         });
     });
 
     describe(".onRamp()", function() {
         var ramp;
-        var sink;
 
-        beforeEach(function(finished) {
-            var done = wait(2, finished);
-
+        beforeEach(function(done) {
             ramp = jersey.onRamp(ONRAMP_PORT, SINK_PORT, done);
-
-            sink = net.createServer();
-            sink.listen(SINK_PORT, done);
         });
 
-        afterEach(function(finished) {
-            var done = wait(2, finished);
-
+        afterEach(function(done) {
             ramp.on("close", done);
-            sink.on("close", done);
-
             ramp.close();
-            sink.close();
         });
 
-        it("should receive data via UDP and output it over a TCP connection", function(done) {
-            var input = randomString(1024);
+        describe("with a connected TCP sink", function() {
+            var sink;
 
-            // send data via UDP
-            var client = dgram.createSocket("udp4");
-            var payload = new Buffer(input);
-            client.send(payload, 0, payload.length, ONRAMP_PORT, "localhost", function(err, bytes) {
-                client.close();
+            beforeEach(function(done) {
+                sink = net.createServer();
+                sink.listen(SINK_PORT, done);
             });
 
-            // assert that data is received by a TCP server
-            sink.on("connection", function(sock) {
-                sock.on("data", jersey._protocolDecoder());
-                sock.on("message", function(message) {
-                    expect(message.toString()).to.equal(input);
-                    done();
+            afterEach(function(done) {
+                sink.on("close", done);
+                sink.close();
+            });
+
+            it("should receive data via UDP and output it over a TCP connection", function(done) {
+                var input = randomString(1024);
+
+                // send data via UDP
+                var client = dgram.createSocket("udp4");
+                var payload = new Buffer(input);
+                client.send(payload, 0, payload.length, ONRAMP_PORT, "localhost", function(err, bytes) {
+                    client.close();
+                });
+
+                // assert that data is received by a TCP server
+                sink.on("connection", function(sock) {
+                    sock.on("data", jersey._protocolDecoder());
+                    sock.on("message", function(message) {
+                        expect(message.toString()).to.equal(input);
+                        done();
+                    });
+                });
+            });
+        });
+
+        describe("with a disconnected TCP sink", function() {
+            it("should complete normally", function(done) {
+                var input = randomString(1024);
+
+                // send data via UDP
+                var client = dgram.createSocket("udp4");
+                var payload = new Buffer(input);
+                client.send(payload, 0, payload.length, ONRAMP_PORT, "localhost", function(err, bytes) {
+                    client.close();
+
+                    // give the prospective ECONNREFUSED Error a chance to
+                    // bubble up
+                    setTimeout(done, 10);
                 });
             });
         });
