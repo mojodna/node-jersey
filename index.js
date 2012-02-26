@@ -84,6 +84,26 @@ exports.offRamp = function(listenPort, dstPort, dstHost, callback) {
     return ramp;
 };
 
+var tcpSend = function(msg, dstPort, dstHost, retries) {
+    // TODO a shared TCP connection might be nice, but error handling
+    // becomes more complicated
+    var proxy = net.connect(dstPort, dstHost, function() {
+        proxy.write(msg.length + ":");
+        proxy.write(msg);
+        proxy.end();
+    });
+
+    proxy.on("error", function(err) {
+        if (retries > 0) {
+            tcpSend(dstPort, dstHost, retries--);
+        } else {
+            console.warn("Proxy socket error: %s", err);
+        }
+    });
+
+    return proxy;
+};
+
 /**
  * Create an on-ramp; receive data via UDP and output it via TCP.
  *
@@ -105,17 +125,7 @@ exports.onRamp = function(listenPort, dstPort, dstHost, callback) {
 
     var ramp = dgram.createSocket("udp4");
     ramp.on("message", function(msg, rinfo) {
-        // TODO a shared TCP connection would be nice, but invalid messages
-        // combined together will confuse the protocol decoder
-        var proxy = net.connect(dstPort, dstHost, function() {
-            proxy.write(msg.length + ":");
-            proxy.write(msg);
-            proxy.end();
-        });
-
-        proxy.on("error", function(err) {
-            console.warn("Proxy socket error: %s", err);
-        });
+        tcpSend(msg, dstPort, dstHost, 1);
     });
 
     ramp.on("listening", callback);
