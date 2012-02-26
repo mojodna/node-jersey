@@ -12,9 +12,8 @@ var OFFRAMP_PORT = 1628;
 var SINK_PORT = 1259;
 
 var wait = function(expected, callback) {
-    var invocations = 0;
     return function() {
-        if (++invocations === expected) {
+        if (--expected === 0) {
             callback();
         }
     };
