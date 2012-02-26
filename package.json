@@ -9,6 +9,7 @@
   },
   "main": "./index",
   "bin": { "jersey-onramp": "./bin/onramp", "jersey-offramp": "./bin/offramp" },
+  "license": "MIT",
   "scripts": {
     "test": "node_modules/.bin/mocha -R spec"
   },

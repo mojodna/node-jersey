@@ -48,4 +48,4 @@ You can also create on- and off-ramps programmatically. See `bin/onramp` and
 
 Copyright (c) 2012 Seth Fitzsimmons
 
-Published under the BSD License.
+Published under the MIT License.
